@@ -1,0 +1,101 @@
+/* iOS Cordova Tweak */
+.device-cordova.device-ios {
+  height: 100vh;
+}
+
+/* Custom color theme properties */
+:root {
+  --f7-theme-color: #927363;
+  --f7-theme-color-rgb: 146, 115, 99;
+  --f7-theme-color-shade: #7a6053;
+  --f7-theme-color-tint: #a48879;
+  --planner-ct-grid-stroke: rgba(0,0,0,.2);
+  --planner-ct-label-color: rgba(0,0,0,.4);
+}
+.ios-translucent-modals .actions-button, .ios-translucent-modals .actions-label{
+  background-color: rgba(var(--f7-actions-bg-color-rgb), 1);
+}
+/* Invert navigation bars to fill style */
+:root.theme-dark,
+:root .theme-dark {
+  --f7-messagebar-bg-color: black;
+  --f7-messagebar-bg-color-rgb: rgb(0,0,0);
+  --f7-bars-border-color: var(--f7-theme-color);
+  --planner-ct-grid-stroke: rgb(255 255 255 / 40%);
+  --planner-ct-label-color: rgb(141, 141, 142);
+
+}
+.ct-grid{
+  stroke: var(--planner-ct-grid-stroke)!important;
+}
+
+.ct-label{
+  color: var(--planner-ct-label-color)!important;
+}
+
+:root,
+:root.theme-dark,
+:root .theme-dark {
+  --f7-bars-bg-color: var(--f7-theme-color);
+  --f7-bars-bg-color-rgb: var(--f7-theme-color-rgb);
+  --f7-bars-translucent-opacity: 0.9;
+  --f7-bars-text-color: #fff;
+  --f7-bars-link-color: #fff;
+  --f7-navbar-subtitle-text-color: rgba(255,255,255,0.85);
+  --f7-bars-border-color: transparent;
+  --f7-tabbar-link-active-color: #fff;
+  --f7-tabbar-link-inactive-color: rgba(255,255,255,0.54);
+  --f7-sheet-border-color: transparent;
+  --f7-tabbar-link-active-border-color: #fff;
+}
+.appbar,
+.navbar,
+.toolbar,
+.subnavbar,
+.calendar-header,
+.calendar-footer {
+  --f7-touch-ripple-color: var(--f7-touch-ripple-white);
+  --f7-link-highlight-color: var(--f7-link-highlight-white);
+  --f7-button-text-color: #fff;
+  --f7-button-pressed-bg-color: rgba(255,255,255,0.1);
+}
+.navbar-large-transparent,
+.navbar-large.navbar-transparent {
+  --f7-navbar-large-title-text-color: #000;
+
+  --r: 255;
+  --g: 124;
+  --b: 124;
+  --progress: var(--f7-navbar-large-collapse-progress);
+  --f7-bars-link-color: rgb(
+    calc(var(--r) + (255 - var(--r)) * var(--progress)),
+    calc(var(--g) + (255 - var(--g)) * var(--progress)),
+    calc(var(--b) + (255 - var(--b)) * var(--progress))
+  );
+}
+.theme-dark .navbar-large-transparent,
+.theme-dark .navbar-large.navbar-transparent {
+  --f7-navbar-large-title-text-color: #fff;
+}
+
+.ios .theme-dark,
+.ios.theme-dark {
+  --f7-messagebar-textarea-text-color: #fff;
+  --f7-messagebar-textarea-border: 1px solid var(--f7-bars-border-color);
+  --f7-messagebar-attachments-border-color: var(--f7-bars-border-color);
+  --f7-messagebar-textarea-background-color: black;
+  --f7-messagebar-textarea-border: 1px solid var(--f7-theme-color);
+}
+
+.md .theme-dark,
+.md.theme-dark {
+  --f7-messagebar-border-color: transparent;
+  --f7-messagebar-link-color: rgba(255, 255, 255, 0.87);
+  --f7-messagebar-textarea-text-color: rgba(255, 255, 255, 0.87);
+  --f7-messagebar-attachments-border-color: rgba(255, 255, 255, 0.2);
+  --f7-messagebar-textarea-border: unset;
+
+}
+
+
+/* Your app custom styles here */
