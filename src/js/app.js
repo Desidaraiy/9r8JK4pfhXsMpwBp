@@ -48,7 +48,20 @@ if (!isCordovaApp){
     lang: 'ru',
     darkTheme: false
   };
-  stats = ['Оборот день т.р.'];
+  stats = [
+    {
+      name: 'Оборот день',
+      id: 1,
+      measureIn: 'ruble',
+      plan: 10000,
+    },
+    {
+      name: 'Тренировка',
+      id: 2,
+      measureIn: 'hour',
+      plan: 1,
+    }
+  ];
   tags = [
     {
       id: 1,

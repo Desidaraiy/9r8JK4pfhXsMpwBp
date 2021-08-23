@@ -5,6 +5,8 @@ import CatalogPage from '../pages/catalog.vue';
 
 import SettingsPage from '../pages/settings.vue';
 
+import StatSettings from '../pages/statssettings.vue';
+
 import NotFoundPage from '../pages/404.vue';
 
 var routes = [
@@ -19,6 +21,10 @@ var routes = [
   {
     path: '/settings/',
     component: SettingsPage
+  },
+  {
+    path: '/stat_settings/',
+    component: StatSettings
   },
   {
     path: '(.*)',

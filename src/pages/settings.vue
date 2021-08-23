@@ -29,16 +29,16 @@
         <f7-block-title>
             <f7-row>
                 <f7-col>{{strings.settingsMyStats}}</f7-col>
-                <f7-col class="text-align-right" @click="addStats()"><f7-icon f7="plus"></f7-icon></f7-col>
+                <f7-col class="text-align-right"><f7-link href="/stat_settings/"><f7-icon f7="plus"></f7-icon></f7-link></f7-col>
             </f7-row>            
         </f7-block-title>
         <f7-list v-if="stats.length == 0">
             <f7-list-item>{{strings.settingsStatsEmpty}}</f7-list-item>
         </f7-list>
         <f7-list v-else strong class="no-margin">
-            <f7-list-item v-for="(stat, index) in stats" :key="`stat-${index}`">
-                {{stat}}
-            <f7-link @click="deleteStats(stat)">{{strings.uiTaskListDelete}}</f7-link>
+            <f7-list-item v-for="stat in stats" :key="stat.id" @click="setCurrentStats(stat.id)">
+                <span>{{stat.name}}</span>
+            <f7-link @click="deleteStats(stat)"><f7-icon f7="xmark"></f7-icon></f7-link>
             </f7-list-item>
         </f7-list>
     </f7-page>
@@ -87,6 +87,13 @@ export default {
             const app = self.$f7;
             const $ = self.$$;
 
+        },
+        setCurrentStats(id){
+            const self = this;
+            const app = self.$f7;
+            const $ = self.$$;      
+            self.$store.commit('setCurrentStats', id);
+            self.$f7router.navigate('/stat_settings/'); 
         },
         toggleDarkTheme(checked){
             const self = this;

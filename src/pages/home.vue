@@ -49,11 +49,7 @@
         </f7-list>
       </f7-popover>
 
-      <f7-navbar :title="strings.uiHomePageTitle+' • '+score+' '+strings.uiHomePageScorePoints">
-        <!-- <f7-nav-right>
-          <f7-link class="link" icon-f7="gear" href="/settings/"></f7-link>
-        </f7-nav-right> -->
-      </f7-navbar>
+      <f7-navbar :title="strings.uiHomePageTitle+' • '+score+' '+strings.uiHomePageScorePoints"></f7-navbar>
 
       <f7-fab id="megafab" position="right-bottom" morph-to=".fab-morph-target.toolbar.messagebar" @click="refreshActions">
         <f7-icon ios="f7:plus" aurora="f7:plus" md="material:add"></f7-icon>

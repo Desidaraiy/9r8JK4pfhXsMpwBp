@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     currentTask: {tags:[]},
     stats: [],
+    currentStats: {},
     darkTheme: false,
     currentLang: "ru",
     strings: [
@@ -155,6 +156,9 @@ export default new Vuex.Store({
     getCurrentLang: state => {
       return state.currentLang;
     },
+    getCurrentStats: state => {
+      return state.currentStats;
+    },
     getStrings: (state) => {
       return state.strings.find(string => string.lang === state.currentLang);
     },
@@ -217,6 +221,11 @@ export default new Vuex.Store({
   mutations: {
     setCurrentTask: (state, payload) => {
       state.currentTask = payload;
+    },
+    setCurrentStats: (state, payload) => {
+      let id = payload;
+      let key = state.stats.find(stats => stats.id === id);
+      state.currentStats = key;
     },
     deleteTag: (state, payload) => {
       let index = state.tags.findIndex(tag => tag.id === payload);
