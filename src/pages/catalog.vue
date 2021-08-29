@@ -12,7 +12,7 @@
       >
         <select name="showstat" :value="selectedStat" @change="selectedStat = $event.target.value; showChart()">
           <option value="prod">{{strings.uiChartPageStatsProductivity}}</option>
-          <option v-for="(stat, index) in stats" :key="`stat-${index}`" :value="stat">{{stat}}</option>
+          <option v-for="(stat, index) in stats" :key="`stat-${index}`" :value="stat.id">{{stat.name}}</option>
         </select>
       </f7-list-item>
       <f7-list-item

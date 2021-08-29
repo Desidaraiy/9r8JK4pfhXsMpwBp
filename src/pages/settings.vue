@@ -20,11 +20,18 @@
         <f7-block-title>
             <f7-row>
                 <f7-col>{{strings.settingsTags}}</f7-col>
-                <f7-col class="text-align-right" @click="addChip()"><f7-icon f7="plus"></f7-icon></f7-col>
+                <f7-col class="text-align-right" @click="addChip()"><f7-link><f7-icon f7="plus"></f7-icon></f7-link></f7-col>
             </f7-row>
         </f7-block-title>
         <f7-block strong class="no-margin">
-            <f7-chip v-for="tag in tags" :key="tag.id" deleteable @click="deleteChip(tag.id)">{{tag.title}}</f7-chip>
+            <f7-chip v-for="tag in tags" 
+            :key="tag.id" 
+            media-bg-color="primary"
+            @click="selectedTag = tag; actionsOpened = true">
+                {{tag.title}}
+            <span slot="media">{{tag.priority > 0 ? tag.priority : ''}}</span>
+            <f7-icon v-if="tag.priority == 0" f7="tag_fill" slot="media"></f7-icon>
+            </f7-chip>
         </f7-block>
         <f7-block-title>
             <f7-row>
@@ -41,6 +48,27 @@
             <f7-link @click="deleteStats(stat)"><f7-icon f7="xmark"></f7-icon></f7-link>
             </f7-list-item>
         </f7-list>
+        <f7-actions :opened="actionsOpened" @actions:closed="actionsOpened = false" >
+            <f7-actions-group>
+                <f7-actions-label>
+                    {{selectedTag.title}}
+                </f7-actions-label>
+                <f7-actions-label>
+                    Приоритет:&nbsp;&nbsp;
+                    <f7-stepper
+                        small
+                        :value="selectedTag.priority"
+                        :min="0" :max="5"
+                        @input="selectedTag.priority = parseInt($event.target.value); setPriority(selectedTag)"                        
+                    ></f7-stepper>
+                </f7-actions-label>
+                <f7-actions-button @click="deleteChip(selectedTag.id)">{{strings.uiTaskListDelete}}</f7-actions-button>
+                <f7-actions-button @click="renameChip(selectedTag)">{{strings.settingsRenameChip}}</f7-actions-button>
+            </f7-actions-group>
+            <f7-actions-group>
+                <f7-actions-button color="red">{{strings.uiTaskListCancel}}</f7-actions-button>
+            </f7-actions-group>
+        </f7-actions>
     </f7-page>
 </template>
 
@@ -63,6 +91,8 @@ export default {
             darkTheme,
             tags,
             stats,
+            actionsOpened: false,
+            selectedTag: '',
         }
     },
     computed: {
@@ -149,13 +179,32 @@ export default {
                     title: newTagTitle
                 };
                 self.db.transaction(function(tx){
-                    tx.executeSql('INSERT INTO tagsTable(title) VALUES(?)', [newTagTitle], function(tx, rs){
+                    tx.executeSql('INSERT INTO tagsTable(title, priority) VALUES(?, ?)', [newTagTitle, 0], function(tx, rs){
                         newTagObj.id = response.insertId;
                         
                     });
                 });
                 self.$store.commit('addTag', newTagObj);
             });
+        },
+        renameChip(tag){
+            const self = this;
+            const app = self.$f7;
+            app.dialog.prompt(self.strings.settingsRenameChip, self.strings.appTitle, function(response){
+                let newTagTitle = '';
+                if(response.startsWith('#') == true){
+                    newTagTitle = response;
+                }else{
+                    newTagTitle = '#'+response;
+                }
+                let payload = [tag.id, response];
+                self.$store.commit('renameTag', payload);
+                let query = 'UPDATE tagsTable SET title = ? WHERE id = ?';
+                let arr = [newTagTitle, tag.id];
+                self.writeChanges(query, arr);       
+            }, function(){
+                console.log('canceled');
+            }, tag.title);
         },
         deleteChip(id){
             const self = this;
@@ -166,6 +215,13 @@ export default {
                 let arr = [id];
                 self.writeChanges(query, arr);
             });
+        },
+        setPriority(tag){
+            const self = this;
+            let arr = [tag.priority, tag.id];
+            self.$store.commit('setTagPriotity', arr);
+            let query = 'UPDATE tagsTable SET priority = ? WHERE id = ?';
+            self.writeChanges(query, arr);
         },
         writeChanges(query, arr){
             const self = this;

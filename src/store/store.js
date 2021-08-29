@@ -30,6 +30,7 @@ export default new Vuex.Store({
         settingsUiLang: 'Язык интерфейса',
         settingsTags: 'Теги',
         settingsDeleteChip: 'Вы хотите удалить тег?',
+        settingsRenameChip: 'Переименовать',
         settingsAddChip: 'Введите название нового тега.',
         uiTasklistExpired: 'Просрочено',
         uiTasklistActual: 'Сегодня',
@@ -88,6 +89,7 @@ export default new Vuex.Store({
         settingsDarkTheme: 'Dark theme',
         settingsUiLang: 'Language',
         settingsTags: 'Tags',
+        settingsRenameChip: 'Rename',
         uiTasklistExpired: 'Overdue',
         uiTasklistActual: 'Today',
         uiTasklistPlanned: 'Planned',
@@ -255,6 +257,14 @@ export default new Vuex.Store({
     },
     addTag: (state, payload) => {
       state.tags.push(payload);
+    },
+    renameTag: (state, payload) => {
+      let key = state.tags.find(tag => tag.id === payload[0]);
+      key.title = payload[1];
+    },
+    setTagPriotity: (state, payload) => {
+      let key = state.tags.find(tag => tag.id === payload[1]);
+      key.priority = payload[0];
     },
     addStats: (state, payload) => {
       state.stats.push(payload);

@@ -65,23 +65,28 @@ if (!isCordovaApp){
   tags = [
     {
       id: 1,
-      title: '#Важно'
+      title: '#Важно',
+      priority: 1
     },
     {
       id: 2,
-      title: '#Работа'
+      title: '#Работа',
+      priority: 0
     },
     {
       id: 3,
-      title: '#Семья'
+      title: '#Семья',
+      priority: 0
     },
     {
       id: 4,
-      title: '#Учеба'
+      title: '#Учеба',
+      priority: 0
     },
     {
       id: 5,
-      title: '#Проект 1'
+      title: '#Проект 1',
+      priority: 0
     }
   ]
   subTasks = [
@@ -226,31 +231,36 @@ const prepare = () => {
         }
         if(row.tablecount < 1){   
           tx.executeSql('CREATE TABLE tagsTable(id INTEGER PRIMARY KEY, title)');
-          tx.executeSql('INSERT INTO tagsTable(title) VALUES(?)', ['#Важно']);
-          tx.executeSql('INSERT INTO tagsTable(title) VALUES(?)', ['#Работа']);
-          tx.executeSql('INSERT INTO tagsTable(title) VALUES(?)', ['#Семья']);
-          tx.executeSql('INSERT INTO tagsTable(title) VALUES(?)', ['#Учеба']);
-          tx.executeSql('INSERT INTO tagsTable(title) VALUES(?)', ['#Проект1']);
+          tx.executeSql('INSERT INTO tagsTable(title, prioity) VALUES(?, ?)', ['#Важно', 1]);
+          tx.executeSql('INSERT INTO tagsTable(title, prioity) VALUES(?, ?)', ['#Работа', 0]);
+          tx.executeSql('INSERT INTO tagsTable(title, prioity) VALUES(?, ?)', ['#Семья', 0]);
+          tx.executeSql('INSERT INTO tagsTable(title, prioity) VALUES(?, ?)', ['#Учеба', 0]);
+          tx.executeSql('INSERT INTO tagsTable(title, prioity) VALUES(?, ?)', ['#Проект1', 0]);
           tags = [
             {
               id: 1,
-              title: '#Важно'
+              title: '#Важно',
+              priority: 1
             },
             {
               id: 2,
-              title: '#Работа'
+              title: '#Работа',
+              priority: 0
             },
             {
               id: 3,
-              title: '#Семья'
+              title: '#Семья',
+              priority: 0
             },
             {
               id: 4,
-              title: '#Учеба'
+              title: '#Учеба',
+              priority: 0
             },
             {
               id: 5,
-              title: '#Проект1'
+              title: '#Проект1',
+              priority: 0
             }
           ];
           console.log('tags created');
@@ -260,7 +270,8 @@ const prepare = () => {
               var row = rs.rows.item(i);
               var newTag = {
                 id: row.id,
-                title: row.title
+                title: row.title,
+                priority: row.priority
               };
               tags.push(newTag);
             }       
