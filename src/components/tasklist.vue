@@ -45,8 +45,8 @@
                 <div slot="footer">
                     <f7-row>
                         <f7-col :class="list == 'expired' ? 'task-body-expired-task-date' : list !== 'actual' ? 'task-body-future-task-date' : '' ">{{item.date}}</f7-col>
-                        <f7-col class="text-align-center" v-show="item.subsCount !== false && item.subsCount !== 0">
-                            <span class="demi-light-span">{{strings.uiTaskListSubTasks}}: {{item.subsCount}}</span>
+                        <f7-col class="text-align-center" v-show="getSubsCount(item.id) !== 0">
+                            <span class="demi-light-span">{{strings.uiTaskListSubTasks}}: {{getSubsCount(item.id)}} / {{getCompletedSubsCount(item.id)}}</span>
                         </f7-col>
                         <f7-col class="text-align-right">{{item.price}} {{strings.uiTaskListPoints}}</f7-col>
                     </f7-row>
@@ -108,11 +108,14 @@
                 <f7-list-item>{{strings.uiTaskListAddSubTask}}</f7-list-item>
             </f7-list>
             <f7-list media class="no-margin sheet-subtasks-list overflow-scroll" v-else>
-                <f7-list-item v-for="item in subtasksId" :key="item.id">
+                <f7-list-item v-for="item in subtasksId" :key="item.id" swipeout>
                     <f7-checkbox slot="media"
                     @change="completeSubTask(item, $event)"
                     :checked="item.completed"></f7-checkbox>
                     <div slot="inner" :class="item.completed ? 'tasks-list-task-completed' : ''">{{item.text}}</div>
+                    <f7-swipeout-actions right>
+                    <f7-swipeout-button class="color-theme-red" delete @click="removeSubTask(item)">{{strings.uiTaskListDelete}}</f7-swipeout-button>
+                    </f7-swipeout-actions>
                 </f7-list-item>
             </f7-list>
         </f7-sheet>
@@ -223,6 +226,14 @@ export default{
                 }
             });            
         },
+        getCompletedSubsCount(id){
+            const self = this;
+            return self.$store.getters.getCompletedSubsCount(id);
+        },
+        getSubsCount(id){
+            const self = this;
+            return self.$store.getters.getSubsCount(id);
+        },       
         getSubTasks(id){
             const self = this;
             self.subtasksId = self.$store.getters.getSubTasks(id);
@@ -276,6 +287,15 @@ export default{
         },
         completeTask(item, e){
             const self = this;
+            const app = self.$f7;
+            if(self.getSubsCount(item.id) !== self.getCompletedSubsCount(item.id)){
+                app.toast.create({
+                    text: self.strings.uiTaskListSubsNotCompleted,
+                    closeTimeout: 1500,
+                }).open();
+                e.target.checked = false;
+                return;
+            }
             self.$store.commit('completeTask', item.id);
             this.countScore();
             let compl = e.target.checked ? 1 : 0;
@@ -295,6 +315,11 @@ export default{
             self.$store.commit('removeTask', item.id);
             self.writeChanges('DELETE FROM tasksTable WHERE id = ?', [item.id]);
             self.countScore();
+        },
+        removeSubTask(item){
+            const self = this;
+            self.$store.commit('removeSubTask', item.id);
+            self.writeChanges('DELETE FROM subTasksTable WHERE id = ?', [item.id]);
         },
         repriceTask(){
             this.$store.commit('repriceTask', this.currentTask);

@@ -52,13 +52,13 @@ if (!isCordovaApp){
     {
       name: 'Оборот день',
       id: 1,
-      measureIn: 'ruble',
+      measure: 'ruble',
       plan: 10000,
     },
     {
       name: 'Тренировка',
       id: 2,
-      measureIn: 'hour',
+      measure: 'hour',
       plan: 1,
     }
   ];
@@ -285,7 +285,6 @@ const prepare = () => {
               price: row.price,
               groupColor: row.groupColor,
               tags: tagsToWork,
-              subsCount: false
             }
             actualTasks.push(taskObj);
           }
@@ -307,7 +306,6 @@ const prepare = () => {
               price: row.price,
               groupColor: row.groupColor,
               tags: tagsToWork,
-              subsCount: false
             }
             expiredTasks.push(taskObj);
           }
@@ -329,7 +327,6 @@ const prepare = () => {
               price: row.price,
               groupColor: row.groupColor,
               tags: tagsToWork,
-              subsCount: false
             }
             futureTasks.push(taskObj);
           }
@@ -343,7 +340,7 @@ const prepare = () => {
       for(let j = 0; j < futureTasks.length; j++){
         tx.executeSql('SELECT * FROM subTasksTable WHERE parentId = ?', [futureTasks[j].id], function(tx, rs){
           if(rs.rows.length !== 0){
-            futureTasks[j].subsCount = rs.rows.length;
+
             for(let i = 0; i < rs.rows.length; i++){
               let row = rs.rows.item(i);
               let compl = numberToBool(row.completed);
@@ -361,7 +358,6 @@ const prepare = () => {
       for(let j = 0; j < actualTasks.length; j++){
         tx.executeSql('SELECT * FROM subTasksTable WHERE parentId = ?', [actualTasks[j].id], function(tx, rs){
           if(rs.rows.length !== 0){
-            actualTasks[j].subsCount = rs.rows.length;
             for(let i = 0; i < rs.rows.length; i++){
               let row = rs.rows.item(i);
               let compl = numberToBool(row.completed);
@@ -379,7 +375,6 @@ const prepare = () => {
       for(let j = 0; j < expiredTasks.length; j++){
         tx.executeSql('SELECT * FROM subTasksTable WHERE parentId = ?', [expiredTasks[j].id], function(tx, rs){
           if(rs.rows.length !== 0){
-            expiredTasks[j].subsCount = rs.rows.length;
             for(let i = 0; i < rs.rows.length; i++){
               let row = rs.rows.item(i);
               let compl = numberToBool(row.completed);

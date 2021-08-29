@@ -48,6 +48,7 @@ export default new Vuex.Store({
         uiTaskListPoints: 'баллов',
         uiTaskListNewSubTask: 'Новая подзадача...',
         uiTaskListCancel: 'Отмена',
+        uiTaskListSubsNotCompleted: 'Подзадачи не выполнены',
 
         uiHomePageTitle: 'Сегодня',
         uiHomePageScorePoints: 'баллов',
@@ -104,6 +105,7 @@ export default new Vuex.Store({
         uiTaskListNewSubTask: 'New subtask...',
         uiTaskListCancel: 'Cancel',
         uiTaskListAddTask: 'Plan anything',
+        uiTaskListSubsNotCompleted: 'Subtasks are not completed.',
 
         uiHomePageTitle: 'Today',
         uiHomePageScorePoints: 'points',
@@ -202,14 +204,34 @@ export default new Vuex.Store({
     getAllSubTasks: (state) => {
       return state.subTasks;
     },
+    getCompletedSubsCount: (state) => (pid) => {
+      let cc = 0;
+      state.subTasks.forEach((el) => {
+        if(el.pid === pid){
+          if(el.completed === true){
+            cc += 1;
+          }
+        }
+      });
+      return cc;
+    },
+    getSubsCount: (state) => (pid) => {
+      let cnc = 0;
+      state.subTasks.forEach((el) => {
+        if(el.pid === pid){
+          cnc += 1;
+        }
+      });
+      return cnc;
+    },
     getCountTasks: state => {
       let countA = 0, countB = 0;
-      state.allTasks.tasks.forEach((el, index, array) => {
+      state.allTasks.tasks.forEach((el) => {
         if(el.completed === false){
           countA++;
         }
       });
-      state.allTasks.expiredTasks.forEach((el, index, array) => {
+      state.allTasks.expiredTasks.forEach((el) => {
         if(el.completed === false){
           countB++;
         }
@@ -267,6 +289,10 @@ export default new Vuex.Store({
       let index = searchInTasks(state, payload, 'index');
       let arr = searchInTasks(state, payload, 'array');
       arr.splice(index, 1);
+    },
+    removeSubTask: (state, payload) => {
+      let index = state.subTasks.findIndex(x => x.id === payload);
+      state.subTasks.splice(index, 1);
     },
     repriceTask: (state, payload) => {
       let id = payload.id
@@ -354,15 +380,20 @@ function searchInTasks(state, payload, searchfor){
   for (const key of Object.keys(obj)) {
     let found = obj[key].find((itm) => itm['id'] === payload);
     if (found) {
-      if(searchfor == 'array'){
-        ret = obj[key];
-      }else if(searchfor == 'arrname'){
-        ret = key;
-      }else if(searchfor == 'index'){
-        ret = obj[key].findIndex(x => x.id === payload);
-      }else if(searchfor == 'key'){
-        index = obj[key].findIndex(x => x.id === payload);
-        ret = obj[key][index];
+      switch(searchfor){
+        case 'array':
+          ret = obj[key];
+        break;
+        case 'arrname':
+          ret = key;
+        break;
+        case 'index':
+          ret = obj[key].findIndex(x => x.id === payload);
+        break;
+        case 'key':
+          index = obj[key].findIndex(x => x.id === payload);
+          ret = obj[key][index];
+        break;
       }
       break;
     }
