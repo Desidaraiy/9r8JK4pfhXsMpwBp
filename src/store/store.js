@@ -144,8 +144,7 @@ export default new Vuex.Store({
     },
     subTasks: [],
     archiveTasks: [],
-    tags: [
-    ],
+    tags: [],
   },
   getters: {
     getCurrentTask: state => {
@@ -265,6 +264,8 @@ export default new Vuex.Store({
     setTagPriotity: (state, payload) => {
       let key = state.tags.find(tag => tag.id === payload[1]);
       key.priority = payload[0];
+      sortByPriority(state);
+
     },
     addStats: (state, payload) => {
       state.stats.push(payload);
@@ -291,7 +292,7 @@ export default new Vuex.Store({
       if(type == 'expiredTasks'){
         state.allTasks.expiredTasks.splice(key, 1);
         state.allTasks.tasks.push(key);
-        state.allTasks.tasks.sort((a, b) => a.tags.includes('#Важно') ? -1 : 1);
+        sortByPriority(state);
       }
       key.completed == true ? key.completed = false : key.completed = true;
     },
@@ -321,7 +322,7 @@ export default new Vuex.Store({
       let key = searchInTasks(state, id, 'key');
       let array = searchInTasks(state, id, 'array');
       key.tags = tags;
-      array.sort((a, b) => a.tags.includes('#Важно') ? -1 : 1);
+      sortByPriority(state);
     },
     reColourTask: (state, payload) => {
       let id = payload[1];
@@ -342,11 +343,11 @@ export default new Vuex.Store({
     },
     pushNewTask: (state, payload) => {
       state.allTasks.tasks.push(payload);
-      state.allTasks.tasks.sort((a, b) => a.tags.includes('#Важно') ? -1 : 1);
+      sortByPriority(state);
     },
     pushActualTasks: (state, payload) => {
       state.allTasks.tasks = payload;
-      state.allTasks.tasks.sort((a, b) => a.tags.includes('#Важно') ? -1 : 1);
+      sortByPriority(state);
     },
     pushExpiredTasks: (state, payload) => {
       state.allTasks.expiredTasks = payload;
@@ -419,4 +420,18 @@ function searchSubTasks(state, id){
     }
   })
   return found;
+}
+
+function sortByPriority(state){
+  let def = {
+    priority: 10
+  };
+  let found = undefined;
+  for(let i = 0; i < state.allTasks.tasks.length; i++){
+    found = state.tags.find(x => x.title === state.allTasks.tasks[i].tags[0] && x.priority !== 0);
+    state.allTasks.tasks[i].tagInfo = found ? found : def;
+  }
+  state.allTasks.tasks.sort(function(a,b){
+    return a.tagInfo.priority - b.tagInfo.priority;
+  });
 }

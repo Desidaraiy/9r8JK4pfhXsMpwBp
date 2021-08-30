@@ -62,6 +62,7 @@
                         @input="selectedTag.priority = parseInt($event.target.value); setPriority(selectedTag)"                        
                     ></f7-stepper>
                 </f7-actions-label>
+                <f7-actions-label>1 - наиболее важный, 5 - наименее важный</f7-actions-label>
                 <f7-actions-button @click="deleteChip(selectedTag.id)">{{strings.uiTaskListDelete}}</f7-actions-button>
                 <f7-actions-button @click="renameChip(selectedTag)">{{strings.settingsRenameChip}}</f7-actions-button>
             </f7-actions-group>

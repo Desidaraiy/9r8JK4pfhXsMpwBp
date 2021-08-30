@@ -421,12 +421,13 @@ function init() {
     },
     mounted(){
       const self = this;
+      
+      self.$store.commit('pushTags', tags);
       self.$store.commit('pushStats', stats);
       self.$store.commit('pushActualTasks', actualTasks);
       self.$store.commit('pushExpiredTasks', expiredTasks);
       self.$store.commit('pushFutureTasks', futureTasks);
       self.$store.commit('pushSubTasks', subTasks);
-      self.$store.commit('pushTags', tags);
       self.$store.commit('setDarkTheme', settings.darkTheme);
       self.$store.commit('setCurrentLang', settings.lang);
 
